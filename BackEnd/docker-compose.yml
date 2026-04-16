@@ -1,0 +1,18 @@
+# Compose individual - Solo para referencia didactica
+# Requiere que la base de datos este levantada (red_app debe existir)
+# Para levantar el backend como parte del proyecto, usar los compose de la raiz
+
+services:
+  backend:
+    build: .
+    container_name: backend_service
+    ports:
+      - "${BACKEND_PORT_EXTERNAL}:${BACKEND_PORT_INTERNAL}"
+    env_file:
+      - .env
+    networks:
+      - red_app
+
+networks:
+  red_app:
+    external: true
