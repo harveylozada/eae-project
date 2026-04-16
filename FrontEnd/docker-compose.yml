@@ -1,0 +1,18 @@
+# Compose individual - Solo para referencia didactica
+# Requiere que backend y base de datos esten levantados (red_app debe existir)
+# Para levantar el frontend como parte del proyecto, usar los compose de la raiz
+
+services:
+  frontend:
+    build: .
+    container_name: frontend_service
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    env_file:
+      - .env
+    networks:
+      - red_app
+
+networks:
+  red_app:
+    external: true

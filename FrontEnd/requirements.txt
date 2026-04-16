@@ -1,0 +1,9 @@
+# Framework principal
+flet==0.22.0
+
+# Si usas llamadas HTTP hacia tu API
+requests
+plotly
+
+# Otras dependencias que uses en tu proyecto (ejemplo)
+pydantic==2.8.2
