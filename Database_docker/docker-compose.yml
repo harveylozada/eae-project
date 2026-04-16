@@ -1,0 +1,43 @@
+#version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_container
+    #restart: unless-stopped
+    ports:
+      #- "1234:5432" #Mapea el puerto 2323 del host al 5432 interno de Postgress
+      - "${DB_PORT_EXTERNAL}:${DB_PORT}"
+    environment:
+      POSTGRES_USER: ${DB_USER} #amigo
+      POSTGRES_PASSWORD: ${DB_PASSWORD} #"elamigo23"
+      POSTGRES_DB: ${DB_NAME} #empresa_amiga # Se creara esta base dedatos al inicializar
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data # Volumen para la persistencia
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql #  Script de inicializacion
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - red_app
+#    networks:
+#      - red_postgres
+
+volumes:
+  pg_data:
+    driver: local
+
+#networks:
+#  red_postgres:
+#    name: red_postgres # Nombre real de la red que se creará
+#    driver: bridge # Utiliza el driver bridge (Por defecto)
+
+networks:
+  red_app:
+    name: red_app
+    driver: bridge
+
