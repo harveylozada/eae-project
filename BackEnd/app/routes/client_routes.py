@@ -15,11 +15,8 @@ def verify_credentials(credentials: HTTPBasicCredentials):
     return credentials.username
 
 @router.get("/clientes", response_model = list[ClienteResponse])
-def listar_clientes(credentials: HTTPBasicCredentials = Depends(security)):
-    verify_credentials(credentials)
+def listar_clientes():
     return get_clientes()
-
-
 
 @router.get("/clientes/{client_id}", response_model = ClienteResponse)
 def obtener_cliente(client_id:int, credentials: HTTPBasicCredentials = Depends(security)):
