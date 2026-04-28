@@ -22,10 +22,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - red_app
 #    networks:
-#      - red_postgres
+#      - red_app
+    networks:
+      - red_postgres
+    
 
 volumes:
   pg_data:
@@ -37,7 +38,5 @@ volumes:
 #    driver: bridge # Utiliza el driver bridge (Por defecto)
 
 networks:
-  red_app:
-    name: red_app
-    driver: bridge
-
+  red_postgres:
+    external: true
