@@ -11,8 +11,13 @@ services:
     env_file:
       - .env
     networks:
-      - red_app
+#      - red_app
+      - red_postgres
 
+#networks:
+#  red_app:
+#    external: true
 networks:
-  red_app:
+  red_postgres:
     external: true
+

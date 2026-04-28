@@ -19,6 +19,9 @@ class ClientsList(ft.Column):
             columns=[
                 ft.DataColumn(ft.Text("ID", weight=ft.FontWeight.BOLD, color="grey_300")),
                 ft.DataColumn(ft.Text("Nombre", weight=ft.FontWeight.BOLD, color="grey_300")),
+                ft.DataColumn(ft.Text("Edad", weight=ft.FontWeight.BOLD, color="grey_300")), # NUEVO
+                ft.DataColumn(ft.Text("Género", weight=ft.FontWeight.BOLD, color="grey_300")), # NUEVO
+                ft.DataColumn(ft.Text("Ubicación", weight=ft.FontWeight.BOLD, color="grey_300")), # NUEVO
                 ft.DataColumn(ft.Text("Email", weight=ft.FontWeight.BOLD, color="grey_300")),
                 ft.DataColumn(ft.Text("Acciones", weight=ft.FontWeight.BOLD, color="grey_300")),
             ],
@@ -116,14 +119,25 @@ class ClientsList(ft.Column):
         page_clients = self.all_clients[start:end]
 
         for client in page_clients:
+            # Lógica para mostrar Género bonito
+            gen = client.get("genero_id")
+            genero_texto = "Masculino" if gen == 0 else "Femenino" if gen == 1 else "N/A"
+            
+            # Lógica para Ubicación
+            ubicacion = f"{client.get('codigo_ciudad', '')}, {client.get('codigo_pais', '')}"
+
             self.client_table.rows.append(
                 ft.DataRow(
                     cells=[
                         ft.DataCell(ft.Text(str(client["id"]), color="white")),
                         ft.DataCell(ft.Text(f"{client.get('nombre', '')} {client.get('apellido', '')}", color="white")),
+                        ft.DataCell(ft.Text(str(client.get("edad", "N/A")), color="white")), # NUEVO
+                        ft.DataCell(ft.Text(genero_texto, color="white")), # NUEVO
+                        ft.DataCell(ft.Text(ubicacion, color="white")), # NUEVO
                         ft.DataCell(ft.Text(client.get("email", ''), color="white")),
                         ft.DataCell(
                             ft.Row([
+                                # ... (mantener los botones de editar y eliminar igual)
                                 ft.IconButton(
                                     icon=icons.EDIT, tooltip="Editar", icon_color="amber",
                                     on_click=lambda e, c=client: self.edit_client(c)
