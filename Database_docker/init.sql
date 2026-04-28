@@ -6,6 +6,35 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'empresa_amiga')\gexec
 \c empresa_amiga;
 
 -- Crear las tablas solo si no existen
+-- Tabla de Géneros (0: Masculino, 1: Femenino)
+CREATE TABLE IF NOT EXISTS generos (
+    id INT PRIMARY KEY,
+    valor VARCHAR(20) NOT NULL
+);
+
+-- Tabla de Países
+CREATE TABLE IF NOT EXISTS paises (
+    codigo VARCHAR(5) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Tabla de Ciudades
+CREATE TABLE IF NOT EXISTS ciudades (
+    codigo VARCHAR(5) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    codigo_pais VARCHAR(5),
+    FOREIGN KEY (codigo_pais) REFERENCES paises(codigo)
+);
+
+--CREATE TABLE IF NOT EXISTS clientes (
+--    id SERIAL PRIMARY KEY,
+--    nombre VARCHAR(100) NOT NULL,
+--    apellido VARCHAR(100) NOT NULL,
+--    email VARCHAR(150) UNIQUE NOT NULL,
+--    telefono VARCHAR(25),
+--    direccion TEXT,
+--    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+--);
 CREATE TABLE IF NOT EXISTS clientes (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -13,7 +42,14 @@ CREATE TABLE IF NOT EXISTS clientes (
     email VARCHAR(150) UNIQUE NOT NULL,
     telefono VARCHAR(25),
     direccion TEXT,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    edad INT, -- Campo nuevo
+    genero_id INT, -- Relación con géneros
+    codigo_pais VARCHAR(5), -- Relación con países
+    codigo_ciudad VARCHAR(5), -- Relación con ciudades
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (genero_id) REFERENCES generos(id),
+    FOREIGN KEY (codigo_pais) REFERENCES paises(codigo),
+    FOREIGN KEY (codigo_ciudad) REFERENCES ciudades(codigo)
 );
 
 CREATE TABLE IF NOT EXISTS productos (
@@ -48,3 +84,14 @@ CREATE TABLE IF NOT EXISTS detalle_ventas (
 CREATE INDEX IF NOT EXISTS idx_cliente_email ON clientes(email);
 CREATE INDEX IF NOT EXISTS idx_producto_nombre ON productos(nombre);
 CREATE INDEX IF NOT EXISTS idx_venta_fecha ON ventas(fecha_venta);
+
+-- Índices para las nuevas tablas maestras
+-- CREATE INDEX IF NOT EXISTS idx_paises_nombre ON paises(nombre);
+-- CREATE INDEX IF NOT EXISTS idx_ciudades_nombre ON ciudades(nombre);
+-- CREATE INDEX IF NOT EXISTS idx_ciudades_pais ON ciudades(codigo_pais);
+
+-- Índices para los nuevos campos de búsqueda en clientes
+CREATE INDEX IF NOT EXISTS idx_cliente_pais ON clientes(codigo_pais);
+CREATE INDEX IF NOT EXISTS idx_cliente_ciudad ON clientes(codigo_ciudad);
+CREATE INDEX IF NOT EXISTS idx_cliente_genero ON clientes(genero_id);
+CREATE INDEX IF NOT EXISTS idx_cliente_edad ON clientes(edad);
